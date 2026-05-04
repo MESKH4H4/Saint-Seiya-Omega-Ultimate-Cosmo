@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saint Seiya Omega: Ultimate Cosmo HD - Comparison Hub</title>
+    
+    <script defer src="https://unpkg.com/img-comparison-slider@7/dist/index.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/img-comparison-slider@7/dist/styles.css" />
+
+    <style>
+        :root {
+            --cosmo-gold: #ffcc00;
+            --cosmo-purple: #4b0082;
+            --cosmo-blue: #000033;
+            --athena-white: #ffffff;
+            --card-bg: #0a0a1a;
+            --text-gray: #777;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--cosmo-blue); 
+            color: var(--athena-white); 
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Fundo Estelar */
+            background-image: radial-gradient(circle at center, #1a1a4a 0%, #000011 100%);
+        }
+
+        .container { max-width: 1100px; width: 100%; text-align: center; }
+
+        header { 
+            padding: 40px 0; 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid var(--cosmo-gold);
+            box-shadow: 0 5px 15px rgba(255, 204, 0, 0.2);
+        }
+        
+        h1 { 
+            color: var(--cosmo-gold); 
+            margin: 0; 
+            font-size: 2.5rem; 
+            text-transform: uppercase; 
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+        }
+        
+        .category-menu {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn-cat {
+            background: rgba(75, 0, 130, 0.3);
+            border: 1px solid var(--cosmo-gold);
+            color: var(--cosmo-gold);
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 20px; /* Estilo mais arredondado/orgânico */
+            transition: all 0.4s;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .btn-cat.active {
+            background: var(--cosmo-gold);
+            color: var(--cosmo-blue);
+            box-shadow: 0 0 20px var(--cosmo-gold);
+        }
+
+        .image-selector {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-img {
+            width: 45px;
+            height: 45px;
+            border: 1px solid var(--cosmo-gold);
+            background: transparent;
+            color: var(--cosmo-gold);
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 50%; /* Botões circulares como planetas */
+            font-weight: bold;
+        }
+
+        .btn-img.active {
+            background: var(--athena-white);
+            color: var(--cosmo-blue);
+            border-color: var(--athena-white);
+            transform: scale(1.2);
+            box-shadow: 0 0 15px var(--athena-white);
+        }
+
+        .comparison-area {
+            background: var(--card-bg);
+            padding: 8px;
+            border: 1px solid #1a1a4a;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+            border-radius: 5px;
+        }
+
+        img-comparison-slider {
+            width: 100%;
+            --divider-color: var(--cosmo-gold);
+            --default-handle-color: var(--cosmo-gold);
+        }
+
+        img-comparison-slider img {
+            width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            display: block;
+        }
+
+        .label-box {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            font-weight: bold;
+            color: var(--cosmo-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        footer { 
+            margin-top: 60px; 
+            color: var(--text-gray); 
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Saint Seiya Omega: Ultimate Cosmo HD</h1>
+            <p style="color: var(--athena-white); opacity: 0.7; font-size: 0.9rem;">ELEVE O SEU COSMO ATÉ O LIMITE HD</p>
+        </header>
+
+        <div class="category-menu">
+            <button class="btn-cat active" onclick="setCategory('psp_vs_hd', this)">PSP 4x vs HD Native</button>
+            <button class="btn-cat" onclick="setCategory('hd_vs_vivid', this)">HD Standard vs Vivid Edition</button>
+        </div>
+
+        <div class="image-selector" id="imgSelector"></div>
+
+        <div class="comparison-area">
+            <div class="label-box">
+                <span id="label-left">Original</span>
+                <span id="label-right">HD</span>
+            </div>
+            
+            <img-comparison-slider id="slider">
+                <img slot="first" id="img-before" src="" />
+                <img slot="second" id="img-after" src="" />
+            </img-comparison-slider>
+        </div>
+
+        <footer>
+            PROJETO DESENVOLVIDO POR MESKH4H4 | SAINT SEIYA HD 2026
+        </footer>
+    </div>
+
+    <script>
+        // Nome do repositório ajustado para Saint Seiya
+        const baseUrl = "https://meskh4h4.github.io/Saint-Seiya-Omega-HD/comparacoes";
+        
+        let currentCategory = 'psp_vs_hd';
+        let currentIndex = 0;
+
+        const configs = {
+            'psp_vs_hd': {
+                leftDir: 'PSP/psp',      // Pasta PSP / psp-0.png
+                rightDir: 'HD/hd',       // Pasta HD / hd-0.png
+                labelL: 'PSP Internal 4x',
+                labelR: 'HD Texture Pack'
+            },
+            'hd_vs_vivid': {
+                leftDir: 'HD/hd',
+                rightDir: 'VIVID/vivid',  // Pasta VIVID / vivid-0.png
+                labelL: 'HD Standard',
+                labelR: 'Vivid Enhanced'
+            }
+        };
+
+        function initSelector() {
+            const selector = document.getElementById('imgSelector');
+            selector.innerHTML = ''; 
+            // 9 imagens no total: vai de 0 até 8
+            for (let i = 0; i <= 8; i++) {
+                const btn = document.createElement('button');
+                btn.innerText = i;
+                btn.className = 'btn-img' + (i === currentIndex ? ' active' : '');
+                btn.onclick = () => setIndex(i, btn);
+                selector.appendChild(btn);
+            }
+        }
+
+        function setCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateImages();
+        }
+
+        function setIndex(idx, btn) {
+            currentIndex = idx;
+            document.querySelectorAll('.btn-img').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateImages();
+        }
+
+        function updateImages() {
+            const config = configs[currentCategory];
+            const imgBefore = document.getElementById('img-before');
+            const imgAfter = document.getElementById('img-after');
+            
+            const cacheBuster = `?t=${new Date().getTime()}`;
+            
+            const newSrcBefore = `${baseUrl}/${config.leftDir}-${currentIndex}.png${cacheBuster}`;
+            const newSrcAfter = `${baseUrl}/${config.rightDir}-${currentIndex}.png${cacheBuster}`;
+
+            imgBefore.src = newSrcBefore;
+            imgAfter.src = newSrcAfter;
+
+            document.getElementById('label-left').innerText = config.labelL;
+            document.getElementById('label-right').innerText = config.labelR;
+        }
+
+        initSelector();
+        updateImages();
+    </script>
+</body>
+</html>
